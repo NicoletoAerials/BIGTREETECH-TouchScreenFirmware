@@ -6,19 +6,19 @@
 
 void TIM3_Config(void)
 {
-  NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
-  NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 
-  RCC->APB1ENR |= RCC_APB1Periph_TIM3;
-  TIM3->CR1 &= ~TIM_CR1_CEN;
-  TIM3->DIER |= TIM_DIER_UIE;
-  TIM3->SR &= ~TIM_SR_UIF;
-  TIM3->ARR = mcuClocks.PCLK1_Timer_Frequency / 1000000 - 1; // 20hz to 1Mhz
+	RCC->APB1ENR |= RCC_APB1Periph_TIM3;
+	TIM3->CR1 &= ~(0x01);
+	TIM3->DIER |= 1<<0;
+  TIM3->SR = (uint16_t)~(1<<0);
+ 	TIM3->ARR = mcuClocks.PCLK1_Timer_Frequency / 1000000 - 1; // 20hz to 1Mhz
 }
 
 void Buzzer_Config(void)

@@ -6,6 +6,7 @@ void Delay_init(void)
 {
   SysTick->CTRL&=0xfffffffb;  // bit2 is cleared, select external clock HCLK / 8
   fac_us=mcuClocks.rccClocks.HCLK_Frequency/(8*1000000); // 8 Frequency after frequency division Unit M is 1us times
+  fac_ms=(u16)fac_us * 1000;  // The number of times in 1ms is 1000 times of 1us
 }
 
 void Delay_us(u32 us)					//Delay is less than 1800 * 1000us
@@ -24,7 +25,14 @@ void Delay_us(u32 us)					//Delay is less than 1800 * 1000us
 
 void Delay_ms(u16 ms)
 {
-  for (u16 i = 0; i < ms; i++) {
-    Delay_us(1000);
-  }
+  u32 temp;
+  SysTick->LOAD=(u32)ms*fac_ms;
+  SysTick->VAL=0x00;
+  SysTick->CTRL=0x01;
+  do
+  {
+    temp=SysTick->CTRL;
+  }while(temp&0x01&&!(temp&(1<<16)));
+  SysTick->CTRL=0x00;
+  SysTick->VAL=0x00;
 }

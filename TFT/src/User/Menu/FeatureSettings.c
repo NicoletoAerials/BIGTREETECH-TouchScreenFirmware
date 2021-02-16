@@ -332,11 +332,12 @@ void updateFeatureSettings(uint8_t key_val)
       settingPage[item_index].icon = iconToggle[infoSettings.z_steppers_alignment];
       break;
 
-    #ifdef PS_ON_PIN
-      case SKEY_PS_ON:
-        infoSettings.auto_off = (infoSettings.auto_off + 1) % ITEM_TOGGLE_AUTO_NUM;
-        settingPage[item_index].valueLabel = itemToggleAuto[infoSettings.auto_off];
-        break;
+    #ifdef LED_COLOR_PIN
+      case SKEY_KNOB:
+        infoSettings.knob_led_color = (infoSettings.knob_led_color + 1 ) % LED_COLOR_NUM;
+        settingPage[item_index].valueLabel = itemLedcolor[infoSettings.knob_led_color];
+        featureSettingsItems.items[key_val] = settingPage[item_index];
+        WS2812_Send_DAT(led_color[infoSettings.knob_led_color]);
 
       case SKEY_PS_ON_ACTIVE_HIGH:
         infoSettings.powerloss_invert = (infoSettings.powerloss_invert + 1) % ITEM_TOGGLE_NUM;
